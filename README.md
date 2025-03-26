@@ -19,3 +19,9 @@ sh docker/build
 sh docker/composer i --ignore-platform-reqs
 sh docker/up
 ```
+
+Execute phpstan
+
+```
+sh docker/phpstan {path}
+```
