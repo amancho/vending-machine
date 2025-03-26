@@ -2,8 +2,8 @@
 
 namespace App\VendingMachine\Domain\Product;
 
-use App\VendingMachine\Domain\Product\ValueObject\ProductName;
 use App\VendingMachine\Domain\Product\ValueObject\ProductId;
+use App\VendingMachine\Domain\Product\ValueObject\ProductName;
 use App\VendingMachine\Domain\Product\ValueObject\ProductPrice;
 use App\VendingMachine\Domain\Product\ValueObject\ProductQuantity;
 

@@ -2,11 +2,11 @@
 
 namespace App\VendingMachine\Infrastructure\Persistence\MySql;
 
+use App\Shared\Domain\InvalidCollectionObjectException;
+use App\Shared\Infrastructure\Persistence\MySql\MySqlRepository;
 use App\VendingMachine\Domain\Product\Product;
 use App\VendingMachine\Domain\Product\ProductCollection;
 use App\VendingMachine\Domain\Product\ProductRepository;
-use App\Shared\Infrastructure\Persistence\MySql\MySqlRepository;
-use App\Shared\Domain\InvalidCollectionObjectException;
 use PDO;
 
 final class ProductRepositoryMySql implements ProductRepository
