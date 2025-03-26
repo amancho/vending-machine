@@ -4,9 +4,9 @@ services:
         container_name: vending-machine.mysql
         environment:
             MYSQL_ROOT_PASSWORD: 'vending_machine'
-            MYSQL_DATABASE: 'vending_machine'
-            MYSQL_USER: 'vending_machine'
-            MYSQL_PASSWORD: 'vending_machine'
+            MYSQL_DATABASE: 'vending_machine_db'
+            MYSQL_USER: 'vending_machine_user'
+            MYSQL_PASSWORD: 'vending_machine_pwd'
         ports:
             - "3305:3306"
         networks:
