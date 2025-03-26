@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+docker network create --driver=bridge --subnet=172.50.0.0/24 vending-machine-net || true
+docker build docker/images/php-cli -t vending-machine.php-cli

@@ -1,0 +1,8 @@
+#!/bin/bash
+
+docker run --rm -it                                                                                                     \
+    --name "vending-machine-execution"                                                                                  \
+    --network "vending-machine-net"                                                                                      \
+    -v "${PWD}:/usr/src"                                                                                                \
+    -w "/usr/src"                                                                                                       \
+    vending-machine.php-cli php index.php "$@"

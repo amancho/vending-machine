@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+    mysql:
+        image: vending-machine.mysql
+        container_name: vending-machine.mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: 'vending_machine'
+            MYSQL_DATABASE: 'vending_machine'
+            MYSQL_USER: 'vending_machine'
+            MYSQL_PASSWORD: 'vending_machine'
+        ports:
+            - "3305:3306"
+        networks:
+            vending-machine-net:
+                ipv4_address: 172.50.0.3
+        tty: true
+
+networks:
+    vending-machine-net:
+        external: true

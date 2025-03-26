@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+docker build docker/images/php-cli -t vending-machine.php-cli
+docker network create --driver=bridge --subnet=172.50.0.0/24 vending-machine-net
+
+docker build docker/images/mysql -t vending-machine.mysql
+docker-compose up -d
