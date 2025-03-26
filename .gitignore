@@ -1,4 +1,6 @@
 /.idea
+/coverage
+/var
 
 # Cache and logs (Symfony2)
 /app/cache/*

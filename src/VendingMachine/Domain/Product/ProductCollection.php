@@ -19,4 +19,12 @@ class ProductCollection extends Collection
     {
         return new ProductCollection([]);
     }
+
+    /**
+     * @throws InvalidCollectionObjectException
+     */
+    public static function create(array $products): self
+    {
+        return new self($products);
+    }
 }

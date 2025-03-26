@@ -7,13 +7,13 @@ use App\VendingMachine\Domain\Product\ValueObject\ProductName;
 use App\VendingMachine\Domain\Product\ValueObject\ProductPrice;
 use App\VendingMachine\Domain\Product\ValueObject\ProductQuantity;
 
-class Product
+readonly class Product
 {
     public function __construct(
-        private readonly ProductId $id,
-        private readonly ProductName $name,
-        private readonly ProductPrice $price,
-        private readonly ProductQuantity $quantity
+        private ProductId       $id,
+        private ProductName     $name,
+        private ProductPrice    $price,
+        private ProductQuantity $quantity
     )
     {
     }
@@ -62,5 +62,14 @@ class Product
     public function quantity(): ProductQuantity
     {
         return $this->quantity;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'name' => $this->name()->value(),
+            'price' => $this->price()->value(),
+            'quantity' => $this->quantity()->value(),
+        ];
     }
 }

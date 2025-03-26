@@ -20,8 +20,21 @@ sh docker/composer i --ignore-platform-reqs
 sh docker/up
 ```
 
+Examples of the use of the application.
+
+```
+docker/console app:show-products
+```
+
+
 Execute phpstan
 
 ```
 sh docker/phpstan {path}
+```
+
+Execute test with coverage
+
+```
+sh docker/test
 ```
