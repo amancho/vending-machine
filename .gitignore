@@ -1,6 +1,9 @@
 /.idea
 /coverage
 /var
+/.phpunit.result.cache
+/coverage.xml
+/test.xml
 
 # Cache and logs (Symfony2)
 /app/cache/*
