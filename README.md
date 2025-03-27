@@ -1,14 +1,15 @@
 # Vending Machine
 
-Vending Machine is an awesome console application that from a few input parameters (drink, amount of money) is capable to order a drink.
+Vending Machine is an awesome console application that from a few input parameters (product, amount of money) is capable to order a drink.
 
-## How it works
-
-Command
-
-```
-app:order-product 
-```
+## Features 
+- Insert coins
+- Select a product
+- Cancel operation
+- Show available products
+- Show coins stored
+- Add products
+- Add coins
 
 ## Project set up
 
@@ -23,7 +24,7 @@ sh docker/up
 Examples of the use of the application.
 
 ```
-docker/console app:show-products
+sh docker/console app:show-products
 ```
 
 
@@ -33,8 +34,16 @@ Execute phpstan
 sh docker/phpstan {path}
 ```
 
-Execute test with coverage
+Execute test with code coverage (in HTML format inside /coverage folder)
 
 ```
 sh docker/test
+```
+
+## How it works
+
+You can run these commands from command line at project root folder (or inside docker)
+```
+sh docker/console app:show-products 
+sh docker/console app:show-coins
 ```

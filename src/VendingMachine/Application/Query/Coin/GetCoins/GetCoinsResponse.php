@@ -22,12 +22,12 @@ final readonly class GetCoinsResponse implements QueryResponse
 
     public function report(): string
     {
-        $report = 'Coin      | Quantity | Amount' . PHP_EOL;
-        $report .= '----------------------------- ' . PHP_EOL;
+        $report = 'Coin     | Quantity | Amount' . PHP_EOL;
+        $report .= '-----------------------------' . PHP_EOL;
 
         foreach ($this->coins as $coin) {
-            $report .= $this->format(strval($coin['value']), 10)
-                . ' | ' . $this->format(strval($coin['total']), 5)
+            $report .= $this->format(strval($coin['value']), 8)
+                . ' | ' . $this->format(strval($coin['total']), 8)
                 . ' | ' . $this->getAmount(floatval($coin['value']), intval($coin['total']))  . PHP_EOL ;
         }
 
@@ -36,7 +36,7 @@ final readonly class GetCoinsResponse implements QueryResponse
 
     private function getAmount(float $value, int $total): string
     {
-        return strval( $value * $total);
+        return strval($value * $total);
     }
 
     private function format(string $type, int $length = 7): string

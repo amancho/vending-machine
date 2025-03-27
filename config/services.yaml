@@ -48,5 +48,9 @@ services:
     arguments:
       $client: '@database_connection'
 
+  App\VendingMachine\Infrastructure\Persistence\MySql\CoinRepositoryMySql:
+    arguments:
+      $client: '@database_connection'
+
   # add more service definitions when explicit configuration is needed
   # please note that last definitions always *replace* previous ones
