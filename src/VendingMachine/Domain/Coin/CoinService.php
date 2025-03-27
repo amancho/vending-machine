@@ -2,6 +2,7 @@
 
 namespace App\VendingMachine\Domain\Coin;
 
+use App\VendingMachine\Domain\Coin\Enum\CoinStatusEnum;
 use App\VendingMachine\Domain\Coin\Errors\CoinNotAllowed;
 
 class CoinService
@@ -29,5 +30,30 @@ class CoinService
         $this->coinRepository->insert($value);
 
         return 'You have insert a ' . $value . ' coin.';
+    }
+
+    function canGiveChange(float $change, array $coins): bool
+    {
+        foreach ($coins as $coin => $count) {
+            while ($change >= $coin && $count > 0) {
+                $change = round($change - floatval($coin), 2);
+                $coins[$coin]--;
+            }
+        }
+
+        return $change == 0.00;
+    }
+
+    function getCoins(CoinStatusEnum $status): array
+    {
+        $storedCoins = $this->coinRepository->getByStatus($status);
+
+        $result = [];
+        foreach ($storedCoins as $coin) {
+            $key = number_format($coin['value'], 2, '.', '');
+            $result[$key] = intval($coin['total']);
+        }
+
+        return $result;
     }
 }
