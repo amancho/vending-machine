@@ -13,4 +13,6 @@ interface CoinRepository
     public function getAll(): CoinCollection;
 
     public function getByStatus(CoinStatusEnum $status): array;
+
+    public function insert(float $value): void;
 }

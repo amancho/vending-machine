@@ -51,6 +51,15 @@ final class CoinRepositoryMySql implements CoinRepository
         return $query->fetchAll();
     }
 
+    public function insert(float $value): void
+    {
+        $stmt = $this->client->prepare('INSERT INTO coins (value, status) VALUES (:value, :status)');
+        $stmt->execute([
+            'value'     => $value,
+            'status'    => CoinStatusEnum::AVAILABLE->value,
+        ]);
+    }
+
     private function toDomain(array $coin): Coin
     {
         return Coin::build(

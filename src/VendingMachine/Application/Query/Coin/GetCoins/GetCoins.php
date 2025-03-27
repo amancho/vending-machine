@@ -19,6 +19,6 @@ final class GetCoins extends QueryHandler
      */
     public function handle(Query $query): QueryResponse
     {
-        return GetCoinsResponse::build($this->coinRepository->getByStatus(CoinStatusEnum::STORED));
+        return GetCoinsResponse::build($this->coinRepository-> getByStatus(CoinStatusEnum::STORED));
     }
 }
