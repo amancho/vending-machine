@@ -43,24 +43,12 @@ final class CoinRepositoryMySql implements CoinRepository
         return $coinsCollection;
     }
 
-    /**
-     * @throws InvalidCollectionObjectException
-     */
-    public function getByStatus(CoinStatusEnum $status): CoinCollection
+    public function getByStatus(CoinStatusEnum $status): array
     {
-        $sql = sprintf("SELECT * FROM coins WHERE status = %s", $status->value);
+        $sql = sprintf("SELECT value, count(value) as total FROM coins WHERE status = '%s' GROUP BY value", $status->value);
         $query = $this->client->query($sql);
-        $coins = $query->fetchAll();
 
-        $coinsCollection = CoinCollection::init();
-
-        if (!empty($coins)) {
-            foreach ($coins as $coin) {
-                $coinsCollection->add($this->toDomain($coin));
-            }
-        }
-
-        return $coinsCollection;
+        return $query->fetchAll();
     }
 
     private function toDomain(array $coin): Coin

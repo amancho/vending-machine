@@ -21,4 +21,4 @@ INSERT INTO coins (`value`, `status`) VALUES (0.05, 'stored');
 INSERT INTO coins (`value`, `status`) VALUES (0.10, 'stored');
 INSERT INTO coins (`value`, `status`) VALUES (0.25, 'stored');
 INSERT INTO coins (`value`, `status`) VALUES (1.00, 'stored');
-INSERT INTO coins (`value`, `status`) VALUES (1.00, 'available');
+INSERT INTO coins (`value`, `status`) VALUES (1.00, 'stored');
