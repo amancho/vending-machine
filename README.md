@@ -11,17 +11,28 @@ Vending Machine is an awesome console application that from a few input paramete
 - Add products
 - Add coins
 
+## Stack requirements
+-  Docker
+-  Docker-compose
+
 ## Project set up
 
-Install and run the application.
+Clone from github and set permissions
 
+```
+git clone git@github.com:amancho/vending-machine.git
+sudo chmod 777 -R vending-machine/
+cd vending-machine
+```
+
+Install and run the application.
 ```
 sh docker/build
 sh docker/composer i --ignore-platform-reqs
 sh docker/up
 ```
 
-Execute phpstan
+Execute phpstan (optional)
 
 ```
 sh docker/phpstan {path}
@@ -31,6 +42,11 @@ Execute test with code coverage (in HTML format inside /coverage folder)
 
 ```
 sh docker/test
+```
+
+localhost url could be different
+```
+http://localhost:63342/vending-machine/coverage/index.html
 ```
 
 ## How it works
