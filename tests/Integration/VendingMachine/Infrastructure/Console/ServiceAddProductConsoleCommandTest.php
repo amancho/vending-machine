@@ -2,10 +2,12 @@
 
 namespace Integration\VendingMachine\Infrastructure\Console;
 
+use App\VendingMachine\Domain\Product\Enum\ProductsEnum;
 use App\VendingMachine\Domain\Product\Errors\ProductIncorrectQuantity;
 use App\VendingMachine\Domain\Product\Errors\ProductNotAllowed;
 use App\VendingMachine\Domain\Product\ProductRepository;
 use App\VendingMachine\Infrastructure\Console\ServiceAddProductConsoleCommand;
+use Exception;
 use VendingMachine\Tests\Integration\IntegrationTestCase;
 
 use Symfony\Component\Console\Command\Command;
@@ -25,6 +27,25 @@ class ServiceAddProductConsoleCommandTest extends IntegrationTestCase
         $this->repository = $this->createMock(ProductRepository::class);
         $this->application->add(new ServiceAddProductConsoleCommand($this->repository));
         $this->command = $this->application->find('app:service-add-product');
+    }
+
+    public function test_service_add_product_works(): void
+    {
+        $this->repository
+            ->expects(self::once())
+            ->method('add');
+
+        $commandTester = new CommandTester($this->command);
+        $commandTester->execute(
+            [
+                'command'   => $this->command->getName(),
+                'product'   => ProductsEnum::SODA->value,
+                'quantity'  => 1,
+            ]
+        );
+
+        $output = $commandTester->getDisplay();
+        $this->assertEquals( 'Add soda 1 items' . PHP_EOL, $output);
     }
 
     public function test_service_add_product_name_fails(): void
@@ -56,12 +77,32 @@ class ServiceAddProductConsoleCommandTest extends IntegrationTestCase
         $commandTester->execute(
             [
                 'command'   => $this->command->getName(),
-                'product'   => 'soda',
+                'product'   => ProductsEnum::SODA->value,
                 'quantity'  => 200,
             ]
         );
 
         $output = $commandTester->getDisplay();
         $this->assertEquals((new ProductIncorrectQuantity)->getMessage() . PHP_EOL, $output);
+    }
+
+    public function test_service_add_fails(): void
+    {
+        $this->repository
+            ->expects(self::once())
+            ->method('add')
+            ->willThrowException(new Exception('Test exception'));
+
+        $commandTester = new CommandTester($this->command);
+        $commandTester->execute(
+            [
+                'command'   => $this->command->getName(),
+                'product'   => ProductsEnum::SODA->value,
+                'quantity'  => 1,
+            ]
+        );
+
+        $output = $commandTester->getDisplay();
+        $this->assertEquals('Test exception' . PHP_EOL, $output);
     }
 }

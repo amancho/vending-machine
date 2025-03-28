@@ -3,7 +3,10 @@
 namespace Integration\VendingMachine\Infrastructure\Console;
 
 use App\VendingMachine\Domain\Coin\CoinRepository;
+use App\VendingMachine\Domain\Coin\Errors\CoinNotAllowed;
 use App\VendingMachine\Infrastructure\Console\InsertCoinConsoleCommand;
+use Exception;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
 use VendingMachine\Tests\Integration\IntegrationTestCase;
 
@@ -12,12 +15,15 @@ class InsertCoinConsoleCommandTest  extends IntegrationTestCase
     /** @var CoinRepository&MockObject  */
     private mixed $repository;
 
+    private Command $command;
+
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->repository = $this->createMock(CoinRepository::class);
         $this->application->add(new InsertCoinConsoleCommand($this->repository));
+        $this->command = $this->application->find('app:insert-coin');
     }
 
     /**
@@ -29,18 +35,35 @@ class InsertCoinConsoleCommandTest  extends IntegrationTestCase
             ->expects(self::once())
             ->method('insert');
 
-        $command = $this->application->find('app:insert-coin');
-
-        $commandTester = new CommandTester($command);
+        $commandTester = new CommandTester($this->command);
         $commandTester->execute(
             [
-                'command'   => $command->getName(),
+                'command'   => $this->command->getName(),
                 'value'     => $value,
             ]
         );
 
         $output = $commandTester->getDisplay();
         $this->assertEquals('You have insert a ' . $value . ' coin.' . PHP_EOL, $output);
+    }
+
+    public function test_insert_coins_throws_exception(): void
+    {
+        $this->repository
+            ->expects(self::once())
+            ->method('insert')
+            ->willThrowException(new Exception('Test exception'));
+
+        $commandTester = new CommandTester($this->command);
+        $commandTester->execute(
+            [
+                'command'   => $this->command->getName(),
+                'value'     => 0.10,
+            ]
+        );
+
+        $output = $commandTester->getDisplay();
+        $this->assertEquals('Test exception' . PHP_EOL, $output);
     }
 
     public function valuesProvider(): array
@@ -59,17 +82,15 @@ class InsertCoinConsoleCommandTest  extends IntegrationTestCase
             ->expects(self::never())
             ->method('insert');
 
-        $command = $this->application->find('app:insert-coin');
-
-        $commandTester = new CommandTester($command);
+        $commandTester = new CommandTester($this->command);
         $commandTester->execute(
             [
-                'command'   => $command->getName(),
+                'command'   => $this->command->getName(),
                 'value'     => 0.50,
             ]
         );
 
         $output = $commandTester->getDisplay();
-        $this->assertEquals('Coin not allowed. The allowed coins are [0.05, 0.10, 0.25, 1]' . PHP_EOL, $output);
+        $this->assertEquals((new CoinNotAllowed())->getMessage() . PHP_EOL, $output);
     }
 }

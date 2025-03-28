@@ -21,13 +21,6 @@ sh docker/composer i --ignore-platform-reqs
 sh docker/up
 ```
 
-Examples of the use of the application.
-
-```
-sh docker/console app:show-products
-```
-
-
 Execute phpstan
 
 ```
@@ -46,5 +39,32 @@ You can run these commands from command line at project root folder (or inside d
 ```
 sh docker/console app:show-products 
 sh docker/console app:show-coins
+
+sh docker/console app:get
+sh docker/console app:insert-coin
 sh docker/console app:return-coins
+
+sh docker/console app:service-add-product
+sh docker/console app:service-add-coin
+```
+
+Examples of the use of the application.
+
+First, insert allowed coins
+```
+sh docker/console app:insert-coin 0.05
+sh docker/console app:insert-coin 0.10  
+sh docker/console app:insert-coin 0.25
+sh docker/console app:insert-coin 1
+
+sh docker/console app:insert-coin 0.50 (fail)
+```
+
+Select allowed product 
+```
+sh docker/console app:get soda
+sh docker/console app:get juice
+sh docker/console app:get water
+
+sh docker/console app:get coconut (fail)
 ```
