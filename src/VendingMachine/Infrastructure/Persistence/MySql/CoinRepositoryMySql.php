@@ -60,6 +60,12 @@ final class CoinRepositoryMySql implements CoinRepository
         ]);
     }
 
+    public function deleteByStatus(CoinStatusEnum $status): void
+    {
+        $stmt = $this->client->prepare('DELETE FROM coins WHERE status = :status');
+        $stmt->execute(['status' => $status->value]);
+    }
+
     private function toDomain(array $coin): Coin
     {
         return Coin::build(

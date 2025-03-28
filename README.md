@@ -46,4 +46,5 @@ You can run these commands from command line at project root folder (or inside d
 ```
 sh docker/console app:show-products 
 sh docker/console app:show-coins
+sh docker/console app:return-coins
 ```

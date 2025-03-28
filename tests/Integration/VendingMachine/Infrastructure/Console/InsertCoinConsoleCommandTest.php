@@ -71,6 +71,6 @@ class InsertCoinConsoleCommandTest  extends IntegrationTestCase
         );
 
         $output = $commandTester->getDisplay();
-        $this->assertEquals('Coin not allowed, the coins allowed are [0.05, 0.10, 0.25, 1]' . PHP_EOL, $output);
+        $this->assertEquals('Coin not allowed. The allowed coins are [0.05, 0.10, 0.25, 1]' . PHP_EOL, $output);
     }
 }

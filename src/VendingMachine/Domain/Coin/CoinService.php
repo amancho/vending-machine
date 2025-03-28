@@ -32,6 +32,14 @@ class CoinService
         return 'You have insert a ' . $value . ' coin.';
     }
 
+    public function back(CoinStatusEnum $status): array
+    {
+        $coins = $this->coinRepository->getByStatus($status);
+        $this->coinRepository->deleteByStatus($status);
+
+        return $coins;
+    }
+
     function canGiveChange(float $change, array $coins): bool
     {
         foreach ($coins as $coin => $count) {
@@ -50,10 +58,20 @@ class CoinService
 
         $result = [];
         foreach ($storedCoins as $coin) {
-            $key = number_format($coin['value'], 2, '.', '');
-            $result[$key] = intval($coin['total']);
+            $key = $this->getValueOfCoin($coin);
+            $result[$key] = $this->getNumberOfCoins($coin);
         }
 
         return $result;
+    }
+
+    private function getNumberOfCoins(array $coin): int
+    {
+        return intval($coin['total']);
+    }
+
+    private function getValueOfCoin(array $coin): string
+    {
+        return number_format($coin['value'], 2, '.', '');
     }
 }

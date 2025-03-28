@@ -18,6 +18,6 @@ final class CoinNotAllowed extends DomainError
 
     protected function errorMessage(): string
     {
-        return 'Coin not allowed, the coins allowed are [0.05, 0.10, 0.25, 1]';
+        return 'Coin not allowed. The allowed coins are [0.05, 0.10, 0.25, 1]';
     }
 }

@@ -15,4 +15,6 @@ interface CoinRepository
     public function getByStatus(CoinStatusEnum $status): array;
 
     public function insert(float $value): void;
+
+    public function deleteByStatus(CoinStatusEnum $status): void;
 }
