@@ -18,6 +18,7 @@ class ReturnCoinConsoleCommandTest  extends IntegrationTestCase
         parent::setUp();
 
         $this->repository = $this->createMock(CoinRepository::class);
+        $this->application->add(new ReturnCoinConsoleCommand($this->repository));
     }
 
     public function test_return_coins_expected_output(): void
@@ -31,7 +32,6 @@ class ReturnCoinConsoleCommandTest  extends IntegrationTestCase
         $this->repository->expects(self::once())
             ->method('deleteByStatus');
 
-        $this->application->add(new ReturnCoinConsoleCommand($this->repository));
         $command = $this->application->find('app:return-coins');
 
         $commandTester = new CommandTester($command);

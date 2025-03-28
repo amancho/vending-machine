@@ -10,4 +10,6 @@ interface ProductRepository
      * @throws InvalidCollectionObjectException
      */
     public function getAll(): ProductCollection;
+
+    public function add(string $name, int $quantity): void;
 }

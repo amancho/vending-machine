@@ -17,6 +17,7 @@ class InsertCoinConsoleCommandTest  extends IntegrationTestCase
         parent::setUp();
 
         $this->repository = $this->createMock(CoinRepository::class);
+        $this->application->add(new InsertCoinConsoleCommand($this->repository));
     }
 
     /**
@@ -28,7 +29,6 @@ class InsertCoinConsoleCommandTest  extends IntegrationTestCase
             ->expects(self::once())
             ->method('insert');
 
-        $this->application->add(new InsertCoinConsoleCommand($this->repository));
         $command = $this->application->find('app:insert-coin');
 
         $commandTester = new CommandTester($command);
@@ -59,7 +59,6 @@ class InsertCoinConsoleCommandTest  extends IntegrationTestCase
             ->expects(self::never())
             ->method('insert');
 
-        $this->application->add(new InsertCoinConsoleCommand($this->repository));
         $command = $this->application->find('app:insert-coin');
 
         $commandTester = new CommandTester($command);

@@ -42,6 +42,15 @@ final class ProductRepositoryMySql implements ProductRepository
         return $productCollection;
     }
 
+    public function add(string $name, int $quantity): void
+    {
+        $stmt = $this->client->prepare('UPDATE products SET quantity = (quantity + :quantity) WHERE name = :name');
+        $stmt->execute([
+            'quantity'  => $quantity,
+            'name'      => $name,
+        ]);
+    }
+
     private function toInfrastructure(Product $product): array
     {
         return [
