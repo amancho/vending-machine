@@ -11,5 +11,9 @@ interface ProductRepository
      */
     public function getAll(): ProductCollection;
 
+    public function getByName(string $name): Product;
+
     public function add(string $name, int $quantity): void;
+
+    public function decrease(Product $product): void;
 }

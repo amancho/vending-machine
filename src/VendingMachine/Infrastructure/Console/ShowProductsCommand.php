@@ -24,7 +24,7 @@ final class ShowProductsCommand extends Command
         try {
             $getProductsQuery = new GetProducts($this->productRepository);
 
-            /** @var $getProductsResponse GetProductsResponse */
+            /** @var GetProductsResponse $getProductsResponse */
             $getProductsResponse = $getProductsQuery->handle(new GetProductsQuery());
 
             $output->write($getProductsResponse->report());

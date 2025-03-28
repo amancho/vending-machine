@@ -6,4 +6,4 @@ docker run --rm -it                                                             
     -v "${PWD}:/usr/src"                                                                                                \
     -w "/usr/src"                                                                                                       \
     -e "XDEBUG_MODE=coverage"                                                                                           \
-    vending-machine.php-cli php vendor/bin/phpstan analyse src/$@
+    vending-machine.php-cli php vendor/bin/phpstan analyse --level 2 src/$@

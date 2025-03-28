@@ -4,6 +4,8 @@ namespace Unit\VendingMachine\Domain\Product;
 
 use App\VendingMachine\Domain\Product\Errors\ProductIncorrectQuantity;
 use App\VendingMachine\Domain\Product\Errors\ProductNotAllowed;
+use App\VendingMachine\Domain\Product\Errors\ProductNotAvailable;
+use App\VendingMachine\Domain\Product\Product;
 use App\VendingMachine\Domain\Product\ProductRepository;
 use App\VendingMachine\Domain\Product\ProductService;
 use PHPUnit\Framework\TestCase;
@@ -29,5 +31,19 @@ class ProductServiceTest extends TestCase
     {
         $this->expectException(ProductIncorrectQuantity::class);
         $this->productService->add('soda', 0);
+    }
+
+    public function test_decrease_quantity_fails(): void
+    {
+        $this->expectException(ProductNotAvailable::class);
+
+        $product = Product::build(0, 'test_product', 1, 0);
+        $this->productService->decreaseQuantity($product);
+    }
+
+    public function test_get_product_fails(): void
+    {
+        $this->expectException(ProductNotAllowed::class);
+        $this->productService->get('test_product');
     }
 }

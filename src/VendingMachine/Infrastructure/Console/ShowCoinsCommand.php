@@ -24,7 +24,7 @@ final class ShowCoinsCommand extends Command
         try {
             $getCoinsQuery = new GetCoins($this->coinRepository);
 
-            /** @var $getCoinsResponse GetCoinsResponse */
+            /** @var GetCoinsResponse $getCoinsResponse  */
             $getCoinsResponse = $getCoinsQuery->handle(new GetCoinsQuery());
 
             $output->write($getCoinsResponse->report());

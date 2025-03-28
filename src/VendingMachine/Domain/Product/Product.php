@@ -44,6 +44,16 @@ readonly class Product
         );
     }
 
+    public static function buildFromArray(array $data): Product
+    {
+        return self::create(
+            ProductId::build(intval($data['id'])),
+            ProductName::build(strval($data['name'])),
+            ProductPrice::build(floatval($data['price'])),
+            ProductQuantity::build(intval($data['quantity']))
+        );
+    }
+
     public function id(): ProductId
     {
         return $this->id;
