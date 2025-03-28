@@ -41,7 +41,7 @@ class ReturnCoinConsoleCommandTest  extends IntegrationTestCase
         $commandTester->execute([]);
 
         $output = $commandTester->getDisplay();
-        $this->assertEquals('Coins to return' . PHP_EOL  . '0.05 coins of 1' . PHP_EOL, $output);
+        $this->assertEquals('Coins to return' . PHP_EOL  . '1 coins of 0.05' . PHP_EOL, $output);
     }
 
     public function test_return_coins_empty_works(): void

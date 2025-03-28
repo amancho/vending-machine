@@ -28,8 +28,8 @@ readonly class ReturnCoinCommandHandler implements CommandHandler
 
         $message = 'Coins to return' . PHP_EOL;
         foreach ($coins as $coin) {
-            $message .= number_format($coin['value'], 2, '.', '')
-                . ' coins of ' . $coin['total'] . PHP_EOL;
+            $message .= $coin['total'] . ' coins of ' .
+                number_format($coin['value'], 2, '.', '') . PHP_EOL;
         }
 
         return $message;

@@ -27,9 +27,23 @@ class CoinService
             throw new CoinNotAllowed();
         }
 
-        $this->coinRepository->insert($value);
+        $this->coinRepository->insert($value, CoinStatusEnum::AVAILABLE);
 
         return 'You have insert a ' . $value . ' coin.';
+    }
+
+    /**
+     * @throws CoinNotAllowed
+     */
+    public function add(float $value, int $quantity): void
+    {
+        if (!$this->check($value)) {
+            throw new CoinNotAllowed();
+        }
+
+        for($i=0; $i < $quantity; $i++) {
+            $this->coinRepository->insert($value, CoinStatusEnum::STORED);
+        }
     }
 
     public function back(CoinStatusEnum $status): array
