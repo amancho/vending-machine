@@ -66,6 +66,30 @@ final class CoinRepositoryMySql implements CoinRepository
         $stmt->execute(['status' => $status->value]);
     }
 
+    public function updateByStatus(CoinStatusEnum $status): void
+    {
+        $stmt = $this->client->prepare("UPDATE coins SET status = :stored WHERE status = :status");
+
+        $stmt->execute([
+            'stored'  => CoinStatusEnum::STORED->value,
+            'status' => CoinStatusEnum::AVAILABLE->value
+        ]);
+    }
+
+    public function updateStatusByValue(float $value, CoinStatusEnum $status, int $limit): void
+    {
+        $stmt = $this->client->prepare("UPDATE coins 
+                SET status = :status 
+                WHERE value = :value  
+                LIMIT :limit");
+
+        $stmt->execute([
+            'value'  => $value,
+            'status' => $status->value,
+            'limit'  => $limit
+        ]);
+    }
+
     private function toDomain(array $coin): Coin
     {
         return Coin::build(

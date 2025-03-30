@@ -52,5 +52,18 @@ services:
     arguments:
       $client: '@database_connection'
 
+  App\VendingMachine\Domain\Product\ProductService:
+    arguments:
+     $productRepository: '@App\VendingMachine\Infrastructure\Persistence\MySql\ProductRepositoryMySql'
+
+  App\VendingMachine\Domain\Coin\CoinService:
+    arguments:
+      $coinRepository: '@App\VendingMachine\Infrastructure\Persistence\MySql\CoinRepositoryMySql'
+
+  App\VendingMachine\Application\Service\GetProductService:
+    arguments:
+      $coinService: '@App\VendingMachine\Domain\Coin\CoinService'
+      $productService: '@App\VendingMachine\Domain\Product\ProductService'
+
   # add more service definitions when explicit configuration is needed
   # please note that last definitions always *replace* previous ones

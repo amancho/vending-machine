@@ -11,7 +11,7 @@ class CoinService
     {
     }
 
-    private array $allowedCoins = [0.05, 0.10, 0.25, 1];
+    private array $allowedCoins = [1, 0.25, 0.10, 0.05];
 
     public function check(float $value): bool
     {
@@ -66,6 +66,26 @@ class CoinService
         return $change == 0.00;
     }
 
+    function calculateCoinsChange(float $amount): array
+    {
+        $result = [];
+
+        $coinsStores = $this->coinRepository->getByStatus(CoinStatusEnum::STORED);
+        $coinsAvailable = $this->coinRepository->getByStatus(CoinStatusEnum::AVAILABLE);
+        $coins = array_merge($coinsStores, $coinsAvailable);
+
+        foreach ($coins as $allowedCoin) {
+            $quantity = floor($amount / floatval($allowedCoin));
+            if ($quantity > 0) {
+                $result[(string) $allowedCoin] = $quantity;
+                $amount -= $quantity * $allowedCoin;
+                $amount = round($amount, 2);
+            }
+        }
+
+        return $result;
+    }
+
     function getCoins(CoinStatusEnum $status): array
     {
         $storedCoins = $this->coinRepository->getByStatus($status);
@@ -77,6 +97,31 @@ class CoinService
         }
 
         return $result;
+    }
+
+    function getAvailableAmount(array $coins): float
+    {
+        $total = 0;
+        foreach ($coins as $value => $quantity) {
+            $total += floatval(floatval($value) * intval($quantity));
+        }
+
+        return $total;
+    }
+
+    function store(): void
+    {
+        $this->coinRepository->updateByStatus(CoinStatusEnum::STORED);
+    }
+
+    function returnChange(array $coinsToReturn): void
+    {
+        foreach ($coinsToReturn as $coin) {
+            $value = (float) $coin['value'];
+            $quantity = (int) $coin['quantity'];
+
+            $this->coinRepository->updateStatusByValue($value, CoinStatusEnum::RETURNED, $quantity);
+        }
     }
 
     private function getNumberOfCoins(array $coin): int

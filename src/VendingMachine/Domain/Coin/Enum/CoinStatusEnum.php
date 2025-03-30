@@ -6,4 +6,5 @@ enum CoinStatusEnum: string
 {
     case AVAILABLE = 'available';
     case STORED = 'stored';
+    case RETURNED = 'returned';
 }

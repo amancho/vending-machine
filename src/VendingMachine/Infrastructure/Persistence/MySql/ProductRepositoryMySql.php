@@ -72,7 +72,7 @@ final class ProductRepositoryMySql implements ProductRepository
     {
         $stmt = $this->client->prepare('UPDATE products SET quantity = (quantity - 1) WHERE id = :id');
         $stmt->execute([
-            'id'  => $product->id(),
+            'id'  => $product->id()->value(),
         ]);
     }
 
