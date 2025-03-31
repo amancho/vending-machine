@@ -4,20 +4,20 @@ namespace App\VendingMachine\Domain\Coin\Errors;
 
 use App\Shared\Domain\DomainError;
 
-final class CoinsChangeNotAvailable extends DomainError
+final class CoinsInsuficientAmount extends DomainError
 {
-    public function __construct()
+    public function __construct(private readonly float $amount)
     {
         parent::__construct();
     }
 
     public function errorCode(): string
     {
-        return 'COIN_CHANGE_NOT_AVAILABLE';
+        return 'COIN_INSUFFICIENT_AMOUNT';
     }
 
     protected function errorMessage(): string
     {
-        return 'Unable to dispense change: insufficient coins available.';
+        return sprintf('Insufficient amount(%s). Please, insert coins.', $this->amount);
     }
 }

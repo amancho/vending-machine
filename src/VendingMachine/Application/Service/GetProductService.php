@@ -3,8 +3,8 @@
 namespace App\VendingMachine\Application\Service;
 
 use App\VendingMachine\Domain\Coin\CoinService;
-use App\VendingMachine\Domain\Coin\Enum\CoinStatusEnum;
 use App\VendingMachine\Domain\Coin\Errors\CoinsChangeNotAvailable;
+use App\VendingMachine\Domain\Coin\Errors\CoinsInsuficientAmount;
 use App\VendingMachine\Domain\Product\Errors\ProductNotAvailable;
 use App\VendingMachine\Domain\Product\Product;
 use App\VendingMachine\Domain\Product\ProductService;
@@ -23,8 +23,8 @@ readonly class GetProductService
             throw new ProductNotAvailable();
         }
 
-        $change = $this->calculateChange($product);
-        $coinsToReturn = $this->coinService->calculateCoinsChange($change);
+        $requiredChange = $this->checkAmount($product);
+        $coinsToReturn = $this->checkChange($requiredChange);
 
         $this->coinService->store();
         $this->coinService->returnChange($coinsToReturn);
@@ -32,16 +32,27 @@ readonly class GetProductService
         $this->productService->decreaseQuantity($product);
     }
 
-    private function calculateChange(Product $product): float
+    private function checkAmount(Product $product): float
     {
-        $availableCoins = $this->coinService->getCoins(CoinStatusEnum::AVAILABLE);
-        $availableAmount = $this->coinService->getAvailableAmount($availableCoins);
+        $availableCoins = $this->coinService->getAvailableCoins();
+        $availableAmount = $this->coinService->getAmount($availableCoins);
 
-        $change = $product->price()->value() - $availableAmount;
-        if (!$this->coinService->canGiveChange($change, $availableCoins)) {
-            throw new CoinsChangeNotAvailable();
+        $change = $availableAmount - $product->price()->value();
+        if ($change < 0) {
+            throw new CoinsInsuficientAmount($availableAmount);
         }
 
         return $change;
+    }
+
+    private function checkChange(float $change): array
+    {
+        $obtainableCoins = $this->coinService->getObtainableCoins();
+
+        if (!$this->coinService->canGiveChange($change, $obtainableCoins)) {
+            throw new CoinsChangeNotAvailable();
+        }
+
+        return $this->coinService->calculateCoinsChange($change, $obtainableCoins);
     }
 }

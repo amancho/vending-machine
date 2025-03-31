@@ -43,6 +43,18 @@ final class CoinRepositoryMySql implements CoinRepository
         return $coinsCollection;
     }
 
+    public function getByMultipleStatus(string $status): array
+    {
+        $sql = "SELECT value, COUNT(*) as total FROM coins 
+                    WHERE status IN ($status) 
+                    GROUP BY value 
+                    ORDER BY value DESC";
+
+        $query = $this->client->query($sql);
+
+        return $query->fetchAll();
+    }
+
     public function getByStatus(CoinStatusEnum $status): array
     {
         $sql = sprintf("SELECT value, count(value) as total FROM coins WHERE status = '%s' GROUP BY value", $status->value);
@@ -66,7 +78,7 @@ final class CoinRepositoryMySql implements CoinRepository
         $stmt->execute(['status' => $status->value]);
     }
 
-    public function updateByStatus(CoinStatusEnum $status): void
+    public function storeByStatus(CoinStatusEnum $status): void
     {
         $stmt = $this->client->prepare("UPDATE coins SET status = :stored WHERE status = :status");
 
@@ -78,15 +90,17 @@ final class CoinRepositoryMySql implements CoinRepository
 
     public function updateStatusByValue(float $value, CoinStatusEnum $status, int $limit): void
     {
-        $stmt = $this->client->prepare("UPDATE coins 
-                SET status = :status 
-                WHERE value = :value  
-                LIMIT :limit");
+        $sql = "UPDATE coins 
+            SET status = :status 
+            WHERE value = :value 
+            AND status = :storedStatus 
+            LIMIT $limit";
 
+        $stmt = $this->client->prepare($sql);
         $stmt->execute([
-            'value'  => $value,
-            'status' => $status->value,
-            'limit'  => $limit
+            'value'         => $value,
+            'status'        => $status->value,
+            'storedStatus'  => CoinStatusEnum::STORED->value,
         ]);
     }
 

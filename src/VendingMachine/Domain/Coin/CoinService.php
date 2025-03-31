@@ -56,29 +56,26 @@ class CoinService
 
     function canGiveChange(float $change, array $coins): bool
     {
+        krsort($coins, SORT_NUMERIC);
+
         foreach ($coins as $coin => $count) {
-            while ($change >= $coin && $count > 0) {
-                $change = round($change - floatval($coin), 2);
-                $coins[$coin]--;
-            }
+            $coin = (float)$coin;
+            $maxUsable = min(floor($change / $coin), $count);
+            $change = round($change - ($maxUsable * $coin), 2);
         }
 
         return $change == 0.00;
     }
 
-    function calculateCoinsChange(float $amount): array
+    function calculateCoinsChange(float $amount, array $coins): array
     {
         $result = [];
 
-        $coinsStores = $this->coinRepository->getByStatus(CoinStatusEnum::STORED);
-        $coinsAvailable = $this->coinRepository->getByStatus(CoinStatusEnum::AVAILABLE);
-        $coins = array_merge($coinsStores, $coinsAvailable);
-
-        foreach ($coins as $allowedCoin) {
-            $quantity = floor($amount / floatval($allowedCoin));
+        foreach ($coins as $coin => $count) {
+            $quantity = floor($amount / floatval($coin));
             if ($quantity > 0) {
-                $result[(string) $allowedCoin] = $quantity;
-                $amount -= $quantity * $allowedCoin;
+                $result[(string) $coin] = $quantity;
+                $amount -= $quantity * $coin;
                 $amount = round($amount, 2);
             }
         }
@@ -86,12 +83,24 @@ class CoinService
         return $result;
     }
 
-    function getCoins(CoinStatusEnum $status): array
+    function getAvailableCoins(): array
     {
-        $storedCoins = $this->coinRepository->getByStatus($status);
+        $availableCoins = $this->coinRepository->getByStatus(CoinStatusEnum::AVAILABLE);
+        return $this->getCoins($availableCoins);
+    }
 
+    function getObtainableCoins(): array
+    {
+        $status = "'" . CoinStatusEnum::AVAILABLE->value . "', '" . CoinStatusEnum::STORED->value . "'";
+        $obtainableCoins = $this->coinRepository->getByMultipleStatus($status);
+
+        return $this->getCoins($obtainableCoins);
+    }
+
+    function getCoins(array $coins): array
+    {
         $result = [];
-        foreach ($storedCoins as $coin) {
+        foreach ($coins as $coin) {
             $key = $this->getValueOfCoin($coin);
             $result[$key] = $this->getNumberOfCoins($coin);
         }
@@ -99,7 +108,7 @@ class CoinService
         return $result;
     }
 
-    function getAvailableAmount(array $coins): float
+    function getAmount(array $coins): float
     {
         $total = 0;
         foreach ($coins as $value => $quantity) {
@@ -111,16 +120,18 @@ class CoinService
 
     function store(): void
     {
-        $this->coinRepository->updateByStatus(CoinStatusEnum::STORED);
+        $this->coinRepository->storeByStatus(CoinStatusEnum::STORED);
     }
 
     function returnChange(array $coinsToReturn): void
     {
-        foreach ($coinsToReturn as $coin) {
-            $value = (float) $coin['value'];
-            $quantity = (int) $coin['quantity'];
+        foreach ($coinsToReturn as $value => $quantity) {
 
-            $this->coinRepository->updateStatusByValue($value, CoinStatusEnum::RETURNED, $quantity);
+            $this->coinRepository->updateStatusByValue(
+                floatval($value),
+                CoinStatusEnum::RETURNED,
+                intval($quantity)
+            );
         }
     }
 

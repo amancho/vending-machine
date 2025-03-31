@@ -12,13 +12,15 @@ interface CoinRepository
      */
     public function getAll(): CoinCollection;
 
+    public function getByMultipleStatus(string $status): array;
+
     public function getByStatus(CoinStatusEnum $status): array;
 
     public function insert(float $value, CoinStatusEnum $status): void;
 
     public function deleteByStatus(CoinStatusEnum $status): void;
 
-    public function updateByStatus(CoinStatusEnum $status): void;
+    public function storeByStatus(CoinStatusEnum $status): void;
 
     public function updateStatusByValue(float $value, CoinStatusEnum $status, int $limit): void;
 }
