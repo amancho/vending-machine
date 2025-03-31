@@ -3,6 +3,7 @@
 namespace Integration\VendingMachine\Infrastructure\Console;
 
 use App\VendingMachine\Domain\Coin\CoinRepository;
+use App\VendingMachine\Domain\Coin\CoinService;
 use App\VendingMachine\Domain\Coin\Enum\CoinStatusEnum;
 use App\VendingMachine\Infrastructure\Console\ReturnCoinConsoleCommand;
 use Exception;
@@ -22,7 +23,7 @@ class ReturnCoinConsoleCommandTest  extends IntegrationTestCase
         parent::setUp();
 
         $this->repository = $this->createMock(CoinRepository::class);
-        $this->application->add(new ReturnCoinConsoleCommand($this->repository));
+        $this->application->add(new ReturnCoinConsoleCommand(new CoinService($this->repository)));
         $this->command = $this->application->find('app:return-coins');
     }
 

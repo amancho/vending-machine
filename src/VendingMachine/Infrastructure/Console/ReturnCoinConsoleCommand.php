@@ -4,7 +4,7 @@ namespace App\VendingMachine\Infrastructure\Console;
 
 use App\VendingMachine\Application\Command\ReturnCoinCommand;
 use App\VendingMachine\Application\Command\ReturnCoinCommandHandler;
-use App\VendingMachine\Domain\Coin\CoinRepository;
+use App\VendingMachine\Domain\Coin\CoinService;
 use App\VendingMachine\Domain\Coin\Enum\CoinStatusEnum;
 use Exception;
 use Symfony\Component\Console\Command\Command;
@@ -13,7 +13,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class ReturnCoinConsoleCommand extends Command
 {
-    public function __construct(private readonly CoinRepository $coinRepository)
+    public function __construct(private readonly CoinService $coinService)
     {
         parent::__construct('app:return-coins');
     }
@@ -23,7 +23,7 @@ class ReturnCoinConsoleCommand extends Command
         try {
             $returnCoinCommand = ReturnCoinCommand::create(CoinStatusEnum::AVAILABLE);
 
-            $returnCoinCommandHandler = new ReturnCoinCommandHandler($this->coinRepository);
+            $returnCoinCommandHandler = new ReturnCoinCommandHandler($this->coinService);
             $output->write($returnCoinCommandHandler->handle($returnCoinCommand));
 
         } catch (Exception $ex) {

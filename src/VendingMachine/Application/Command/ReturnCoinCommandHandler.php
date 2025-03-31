@@ -3,20 +3,17 @@
 namespace App\VendingMachine\Application\Command;
 
 use App\Shared\Domain\Bus\Command\CommandHandler;
-use App\VendingMachine\Domain\Coin\CoinRepository;
 use App\VendingMachine\Domain\Coin\CoinService;
 
 readonly class ReturnCoinCommandHandler implements CommandHandler
 {
-    public function __construct(private CoinRepository $coinRepository)
+    public function __construct(private CoinService $coinService)
     {
     }
 
     public function handle(ReturnCoinCommand $command): string
     {
-        $coinService = new CoinService($this->coinRepository);
-        $coins = $coinService->back($command->status());
-
+        $coins = $this->coinService->back($command->status());
         return $this->buildMessage($coins);
     }
 
