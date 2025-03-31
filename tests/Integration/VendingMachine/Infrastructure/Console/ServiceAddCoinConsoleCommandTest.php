@@ -3,6 +3,7 @@
 namespace Integration\VendingMachine\Infrastructure\Console;
 
 use App\VendingMachine\Domain\Coin\CoinRepository;
+use App\VendingMachine\Domain\Coin\CoinService;
 use App\VendingMachine\Domain\Coin\Errors\CoinNotAllowed;
 use App\VendingMachine\Domain\Product\ProductRepository;
 use App\VendingMachine\Infrastructure\Console\ServiceAddCoinConsoleCommand;
@@ -24,7 +25,7 @@ class ServiceAddCoinConsoleCommandTest extends IntegrationTestCase
         parent::setUp();
 
         $this->repository = $this->createMock(CoinRepository::class);
-        $this->application->add(new ServiceAddCoinConsoleCommand($this->repository));
+        $this->application->add(new ServiceAddCoinConsoleCommand(new CoinService($this->repository)));
         $this->command = $this->application->find('app:service-add-coin');
     }
 
