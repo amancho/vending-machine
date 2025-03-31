@@ -8,6 +8,7 @@ use App\VendingMachine\Domain\Product\ProductCollection;
 use App\VendingMachine\Domain\Product\ProductRepository;
 use App\VendingMachine\Infrastructure\Console\ShowProductsCommand;
 
+use stdClass;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
 
@@ -45,9 +46,9 @@ class ShowProductsCommandTest extends IntegrationTestCase
 
         $expectedOutput = "Drink      | Price | Quantity 
 ----------------------------- 
-Juice      | 1     | 10
-Soda       | 1.5   | 10
-Water      | 0.65  | 10
+juice      | 1     | 10
+soda       | 1.5   | 10
+water      | 0.65  | 10
 ";
 
         $output = $commandTester->getDisplay();
@@ -60,7 +61,7 @@ Water      | 0.65  | 10
         $this->repository
             ->expects(self::once())
             ->method('getAll')
-            ->willThrowException(new InvalidCollectionObjectException(Product::build(1, 'tea', 0, 0), Product::class));
+            ->willThrowException(new InvalidCollectionObjectException(new stdClass(), Product::class));
 
         $commandTester = new CommandTester($this->command);
         $commandTester->execute(['command'  => $this->command->getName()]);

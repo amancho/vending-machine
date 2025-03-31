@@ -5,6 +5,7 @@ namespace Integration\VendingMachine\Infrastructure\Console;
 use App\VendingMachine\Domain\Coin\CoinRepository;
 use App\VendingMachine\Infrastructure\Console\ShowCoinsCommand;
 
+use Exception;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
 
@@ -54,5 +55,19 @@ class ShowCoinsCommandTest extends IntegrationTestCase
             ['value' => 0.1, 'total' => 2],
             ['value' => 0.25, 'total' => 2],
         ];
+    }
+
+    public function test_show_coins_throws_exception(): void
+    {
+        $this->repository
+            ->expects(self::once())
+            ->method('getByStatus')
+            ->willThrowException(new Exception('Test exception'));
+
+        $commandTester = new CommandTester($this->command);
+        $commandTester->execute(['command' => $this->command->getName()]);
+
+        $output = $commandTester->getDisplay();
+        $this->assertEquals('Test exception' . PHP_EOL, $output);
     }
 }

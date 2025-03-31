@@ -6,10 +6,11 @@ use App\VendingMachine\Domain\Product\Enum\ProductsEnum;
 use App\VendingMachine\Domain\Product\Errors\ProductIncorrectQuantity;
 use App\VendingMachine\Domain\Product\Errors\ProductNotAllowed;
 use App\VendingMachine\Domain\Product\Errors\ProductNotAvailable;
+use App\VendingMachine\Domain\Product\Errors\ProductNotFound;
 
-readonly class ProductService
+class ProductService
 {
-    public function __construct(private ProductRepository $productRepository)
+    public function __construct(private readonly ProductRepository $productRepository)
     {
     }
 
@@ -22,6 +23,9 @@ readonly class ProductService
         $this->productRepository->decrease($product);
     }
 
+    /**
+     * @throws ProductNotFound
+     */
     public function get(string $name): Product
     {
         $product = ProductsEnum::tryFrom($name);

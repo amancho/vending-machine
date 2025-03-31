@@ -1,10 +1,12 @@
 <?php declare (strict_types=1);
 
-namespace Unit\VendingMachine\Domain\Product;
+namespace VendingMachine\Tests\Unit\Domain\Product;
 
+use App\VendingMachine\Domain\Product\Enum\ProductsEnum;
 use App\VendingMachine\Domain\Product\Errors\ProductIncorrectQuantity;
 use App\VendingMachine\Domain\Product\Errors\ProductNotAllowed;
 use App\VendingMachine\Domain\Product\Errors\ProductNotAvailable;
+use App\VendingMachine\Domain\Product\Errors\ProductNotFound;
 use App\VendingMachine\Domain\Product\Product;
 use App\VendingMachine\Domain\Product\ProductRepository;
 use App\VendingMachine\Domain\Product\ProductService;
@@ -37,7 +39,7 @@ class ProductServiceTest extends TestCase
     {
         $this->expectException(ProductNotAvailable::class);
 
-        $product = Product::build(0, 'test_product', 1, 0);
+        $product = Product::build(0, ProductsEnum::JUICE->value, 1, 0);
         $this->productService->decreaseQuantity($product);
     }
 
@@ -45,5 +47,17 @@ class ProductServiceTest extends TestCase
     {
         $this->expectException(ProductNotAllowed::class);
         $this->productService->get('test_product');
+    }
+
+    public function test_get_product_not_found(): void
+    {
+        $this->expectException(ProductNotFound::class);
+
+        $this->productRepositoryMock
+            ->expects($this->once())
+            ->method('getByName')
+            ->willthrowException(new ProductNotFound());
+
+        $this->productService->get(ProductsEnum::JUICE->value);
     }
 }

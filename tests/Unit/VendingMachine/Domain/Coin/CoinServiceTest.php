@@ -1,6 +1,6 @@
 <?php declare (strict_types=1);
 
-namespace Unit\VendingMachine\Domain\Coin;
+namespace VendingMachine\Tests\Unit\Domain\Coin;
 
 use App\VendingMachine\Domain\Coin\Coin;
 use App\VendingMachine\Domain\Coin\CoinRepository;

@@ -2,6 +2,7 @@
 
 namespace App\VendingMachine\Domain\Product;
 
+use App\VendingMachine\Domain\Product\Enum\ProductsEnum;
 use App\VendingMachine\Domain\Product\ValueObject\ProductId;
 use App\VendingMachine\Domain\Product\ValueObject\ProductName;
 use App\VendingMachine\Domain\Product\ValueObject\ProductPrice;
@@ -38,7 +39,7 @@ readonly class Product
     {
         return self::create(
             ProductId::build($id),
-            ProductName::build($name),
+            ProductName::build(ProductsEnum::from(strtolower($name))->value),
             ProductPrice::build($price),
             ProductQuantity::build($quantity)
         );
@@ -48,7 +49,7 @@ readonly class Product
     {
         return self::create(
             ProductId::build(intval($data['id'])),
-            ProductName::build(strval($data['name'])),
+            ProductName::build(ProductsEnum::from(strtolower($data['name']))->value),
             ProductPrice::build(floatval($data['price'])),
             ProductQuantity::build(intval($data['quantity']))
         );
