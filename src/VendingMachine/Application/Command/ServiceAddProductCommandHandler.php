@@ -3,20 +3,17 @@
 namespace App\VendingMachine\Application\Command;
 
 use App\Shared\Domain\Bus\Command\CommandHandler;
-use App\VendingMachine\Domain\Product\ProductRepository;
 use App\VendingMachine\Domain\Product\ProductService;
 
 readonly class ServiceAddProductCommandHandler implements CommandHandler
 {
-    public function __construct(private ProductRepository $productRepository)
+    public function __construct(private ProductService $productService)
     {
     }
 
     public function handle(ServiceAddProductCommand $command): string
     {
-        $productService = new ProductService($this->productRepository);
-        $productService->add($command->name(), $command->quantity());
-
+        $this->productService->add($command->name(), $command->quantity());
         return $this->buildMessage($command->name(), $command->quantity());
     }
 

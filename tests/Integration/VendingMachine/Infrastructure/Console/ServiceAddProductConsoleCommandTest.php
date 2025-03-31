@@ -6,6 +6,7 @@ use App\VendingMachine\Domain\Product\Enum\ProductsEnum;
 use App\VendingMachine\Domain\Product\Errors\ProductIncorrectQuantity;
 use App\VendingMachine\Domain\Product\Errors\ProductNotAllowed;
 use App\VendingMachine\Domain\Product\ProductRepository;
+use App\VendingMachine\Domain\Product\ProductService;
 use App\VendingMachine\Infrastructure\Console\ServiceAddProductConsoleCommand;
 use Exception;
 use VendingMachine\Tests\Integration\IntegrationTestCase;
@@ -25,7 +26,7 @@ class ServiceAddProductConsoleCommandTest extends IntegrationTestCase
         parent::setUp();
 
         $this->repository = $this->createMock(ProductRepository::class);
-        $this->application->add(new ServiceAddProductConsoleCommand($this->repository));
+        $this->application->add(new ServiceAddProductConsoleCommand(new ProductService($this->repository)));
         $this->command = $this->application->find('app:service-add-product');
     }
 
