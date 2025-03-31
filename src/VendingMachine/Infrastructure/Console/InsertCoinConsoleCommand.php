@@ -4,7 +4,7 @@ namespace App\VendingMachine\Infrastructure\Console;
 
 use App\VendingMachine\Application\Command\InsertCoinCommand;
 use App\VendingMachine\Application\Command\InsertCoinCommandHandler;
-use App\VendingMachine\Domain\Coin\CoinRepository;
+use App\VendingMachine\Domain\Coin\CoinService;
 use Exception;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -13,7 +13,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class InsertCoinConsoleCommand extends Command
 {
-    public function __construct(private readonly CoinRepository $coinRepository)
+    public function __construct(private readonly CoinService $coinService)
     {
         parent::__construct('app:insert-coin');
     }
@@ -34,7 +34,7 @@ class InsertCoinConsoleCommand extends Command
                 (float) $input->getArgument('value')
             );
 
-            $insertCoinCommandHandler = new InsertCoinCommandHandler($this->coinRepository);
+            $insertCoinCommandHandler = new InsertCoinCommandHandler($this->coinService);
             $output->writeln($insertCoinCommandHandler->handle($insertCoinCommand));
 
         } catch (Exception $ex) {

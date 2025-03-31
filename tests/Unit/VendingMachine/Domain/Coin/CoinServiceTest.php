@@ -2,8 +2,10 @@
 
 namespace Unit\VendingMachine\Domain\Coin;
 
+use App\VendingMachine\Domain\Coin\Coin;
 use App\VendingMachine\Domain\Coin\CoinRepository;
 use App\VendingMachine\Domain\Coin\CoinService;
+use App\VendingMachine\Domain\Coin\Enum\CoinStatusEnum;
 use App\VendingMachine\Domain\Coin\Errors\CoinNotAllowed;
 use PHPUnit\Framework\TestCase;
 
@@ -20,19 +22,20 @@ class CoinServiceTest extends TestCase
 
     public function test_insert_allowed_coin_works(): void
     {
+        $coin = Coin::build(0, 0.10, CoinStatusEnum::AVAILABLE->value);
+
         $this->coinRepositoryMock
             ->expects($this->once())
             ->method('insert')
-            ->with(0.10);
+            ->with($coin);
 
-        $message = $this->coinService->insert(0.10);
-        $this->assertEquals('You have insert a 0.1 coin.', $message);
+        $this->coinService->insert($coin);
     }
 
     public function test_insert_not_allowed_coin_works(): void
     {
         $this->expectException(CoinNotAllowed::class);
-        $this->coinService->insert(0.07);
+        $this->coinService->insert(Coin::build(0, 0.50, CoinStatusEnum::AVAILABLE->value));
     }
 
     /**
